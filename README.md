@@ -26,10 +26,11 @@ GET /srp/password?phone=xx
 	"N_num_bits": "2048"
 	"s": "xx"
 }
+
+# N_num_bits: srp算法中使用多少位的N
+# s: salt
 ```
 
-	- N_num_bits: srp算法中使用多少位的N
-	- s: salt
 
 
 # 获取srp.B
