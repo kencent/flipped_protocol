@@ -1,0 +1,98 @@
+<html>
+
+<head>
+  
+    <script type="text/javascript" src="sjcl.js"></script>
+
+    <script type="text/javascript">
+
+    // 登录流程
+    // 第一步, 获取短信验证码
+    // password通过短信下发, bits, salt接口返回
+    // client -> server: username
+    // server -> client: bits, salt
+	// sms -> client: password
+    var username = 'username';
+    var password = '123456';
+    var bits = '2048';
+    var salt = sjcl.codec.hex.toBits("A55A7826B145D3E99DB221EB815416B1");
+
+    // 第二步, 生成客户端随机值，使用客户端随机值换取服务器端随机值
+    // client -> server: A
+    // server -> client: B
+    var srp = sjcl.keyexchange.srp;
+    var group = srp.knownGroup(bits);
+    var a = sjcl.codec.hex.toBits("BCF1ABCBF6F5CFC9D0540AFEA863E030C27683A8EDD91C86ACC159699BD65112"); //sjcl.random.randomWords(8);
+    var A = srp.makeA(a, group);
+    var B = sjcl.codec.hex.toBits("2726F171F3E59EAAEEFCAA8246B9C733233BF6C14BF68604F2425390A0CFDE858F404E97F3A6D941C8EF679352D11D3B961C35D98B69AAE183ED39A412A42D5EDD066F09976EB64C18C750DD44C6A82BDBBC37327C6AB86C33BF4A19843C1846B2EC4602A710B46F39676D51764D23CD4662DD6E941CF0E425B1C1B0EC7A824613B46DA6C11E0EBCCAE54287D7A34533B63AEE33BC1111F4C9B127C59B7109D8269C71672B5D5006797FC297E0388D303D09E2EEC62757DE61F65ACA04A390A9D6B0197724A454C1B4B03CC587604C6D6824E63C8AA5E91CBFDE5D8C3023BE40352969AE02640466EDC957AFFD2BA01842DB54863EE7256F0FB4993029D1FD90");
+    if (sjcl.bn.fromBits(B).mod(group.N).equals(0)) {
+        console.log("bad server");
+    }
+
+    // 第三步, 验证验证码, 同时验证域名是否被劫持
+    // client -> server: M1
+	// server -> client: M2
+    var ClientKey = srp.makeClientKey(username, password, salt, a, A, B, group);
+    var M1 = srp.makeM1(username, salt, A, B, ClientKey, group);
+    var M2 = srp.makeM2(A, M1, ClientKey);
+    var serverM2 = "61CBB07E7836FDC6F067CFEA1BB48A8220C11EA8";
+    if (sjcl.codec.hex.fromBits(M2) != serverM2.toLowerCase()) {
+        console.log("bad server");
+    }
+
+
+    // 验证码正确
+    // 客户端存储salt, password(明文或使用ClientKey加密), ClientKey
+    // 每次请求用ClientKey加密(username, + local millisecond + seq + client(platform + version) + random)得到token
+    // 并设置到头部 Authorization: SRP {token}
+    console.log("password = "  + password);
+    console.log("ClientKey = "  + sjcl.codec.hex.fromBits(ClientKey));
+    var seq = 1;
+	//var token = {I: username, t: new Date().getTime(), q: seq, clt: {p: "wxapp", v: 10000}, r: sjcl.random.randomWords(1)[0]};
+	var token = {I: username, q: seq, clt: {p: "wxapp", v: 10000}};
+    token = sjcl.codec.utf8String.toBits(JSON.stringify(token));
+	// iv是前后台写死的一个固定的值 
+    var iv = sjcl.codec.hex.toBits("bfd3814678afe0036efa67ca8da44e2e");
+    var aes = new sjcl.cipher.aes(ClientKey.slice(0, 8)); 
+    token = sjcl.mode.cbc.encrypt(aes, token, iv);
+    console.log("token = "  + sjcl.codec.base64.fromBits(token));
+
+	//token = sjcl.mode.cbc.decrypt(aes, token, iv);
+	//console.log("token = ", sjcl.codec.utf8String.fromBits(token));
+
+
+
+    // ----------------------------------------------------------------------------------------------------
+    // 请求流程
+    // 发送任意业务请求, 服务器告诉客户端ClientKey已经过期, 则客户端与服务器端协商生成新的ClientKey, 协商过程同登录流程的第二, 三步
+    // server -> client: status(401), 头部WWW-Authenticate SRP N_num_bits={bits}
+	// 注意bits可能会变化, 必须使用头部返回的bits
+
+    // 第一步, 生成客户端随机值，使用客户端随机值换取服务器端随机值
+    // client -> server: A
+    // server -> client: B
+    a = sjcl.codec.hex.toBits("BCF1ABCBF6F5CFC9D0540AFEA863E030C27683A8EDD91C86ACC159699BD65112"); //sjcl.random.randomWords(8);
+    A = srp.makeA(a, group);
+    B = sjcl.codec.hex.toBits("2726F171F3E59EAAEEFCAA8246B9C733233BF6C14BF68604F2425390A0CFDE858F404E97F3A6D941C8EF679352D11D3B961C35D98B69AAE183ED39A412A42D5EDD066F09976EB64C18C750DD44C6A82BDBBC37327C6AB86C33BF4A19843C1846B2EC4602A710B46F39676D51764D23CD4662DD6E941CF0E425B1C1B0EC7A824613B46DA6C11E0EBCCAE54287D7A34533B63AEE33BC1111F4C9B127C59B7109D8269C71672B5D5006797FC297E0388D303D09E2EEC62757DE61F65ACA04A390A9D6B0197724A454C1B4B03CC587604C6D6824E63C8AA5E91CBFDE5D8C3023BE40352969AE02640466EDC957AFFD2BA01842DB54863EE7256F0FB4993029D1FD90");
+    if (sjcl.bn.fromBits(B).mod(group.N).equals(0)) {
+        console.log("bad server");
+    }
+
+    // 第二步, 生成新的ClientKey, 同时验证域名是否被劫持
+    // client -> server: M1
+	// server -> client: M2
+    ClientKey = srp.makeClientKey(username, password, salt, a, A, B, group);
+    M1 = srp.makeM1(username, salt, A, B, ClientKey, group);
+    M2 = srp.makeM2(A, M1, ClientKey);
+    var serverM2 = "61CBB07E7836FDC6F067CFEA1BB48A8220C11EA8";
+    if (sjcl.codec.hex.fromBits(M2) != serverM2.toLowerCase()) {
+        console.log("bad server");
+    }
+
+    // 生成新的ClientKey后, 客户端更新本地ClientKey, 重试业务请求
+
+    </script>
+
+</head>
+
+</html>
