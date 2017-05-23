@@ -1,6 +1,6 @@
 # 接口规范
 任何业务接口, 后台发现K不存在(过期也是不存在), 则返回401, 并在头部中设置:
-`WWW-Authenticate: SRP N_num_bits="2048"`
+`WWW-Authenticate: SRP realm="flipped", N_num_bits="2048"`
 
 任何业务接口, 前端需使用srp.K加密(phone + local miniseconds + seq + client(platform, version) + random)得到auth-param, 并设置到头部:
 Authorization: SRP auth-param
@@ -70,7 +70,7 @@ GET /srp/M2?phone=xx&M1=xx
 * 422 Unprocessable Entity
 ```
 {
-	"err": "M1值非法",
+	"err": "验证码错误",
 	"errcode": 0
 }
 ```
