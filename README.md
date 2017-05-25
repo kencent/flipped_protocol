@@ -23,12 +23,24 @@ GET /srp/password?phone=xx
 * 200 OK
 ```
 {
-	"N_num_bits": "2048"
-	"s": "xx"
+	"N_num_bits": "2048",
+	"s": "xx",
+	"countdown": 60,
+	"validtime": 300,
 }
 
 # N_num_bits: srp算法中使用多少位的N
 # s: salt
+# countdown: 倒计时，xx秒内不能重新获取
+# validtime: xx秒内验证码有效
+```
+
+* 403 Forbidden
+```
+{
+	"err": "获取验证码次数过多，请稍后重试",
+	"errcode": 0
+}
 ```
 
 
