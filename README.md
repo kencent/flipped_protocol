@@ -35,7 +35,7 @@ GET /srp/password?phone=xx
 # validtime: xx秒内验证码有效
 ```
 
-* 403 Forbidden
+* 429 Too Many Requests
 ```
 {
 	"err": "获取验证码次数过多，请稍后重试",
@@ -82,11 +82,18 @@ GET /srp/M2?phone=xx&M1=xx
 * 422 Unprocessable Entity
 ```
 {
-	"err": "验证码错误",
+	"err": "验证码错误，还有2次机会",
 	"errcode": 0
 }
 ```
 
+* 429 Too Many Requests
+```
+{
+	"err": "输入错误的验证码达到3次，请重新获取验证码",
+	"errcode": 0
+}
+```
 
 
 
