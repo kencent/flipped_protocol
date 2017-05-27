@@ -5,6 +5,9 @@
 任何业务接口, 前端需使用srp.K加密(phone + local miniseconds + seq + client(platform, version) + random)得到auth-param, 并设置到头部:
 Authorization: SRP auth-param
 
+任何业务接口，需要设置头部用户标识
+x-uid: phone
+
 
 所有4xx 5xx返回的错误信息在body里面, 如:
 ```
@@ -17,7 +20,7 @@ Authorization: SRP auth-param
 
 # 获取验证码
 ```
-GET /srp/password?phone=xx
+GET /srp/password
 ```
 
 * 200 OK
@@ -47,7 +50,7 @@ GET /srp/password?phone=xx
 
 # 获取srp.B
 ```
-GET /srp/B?phone=xx&A=xx
+GET /srp/B?A=xx
 ```
 
 * 200 OK
@@ -69,7 +72,7 @@ GET /srp/B?phone=xx&A=xx
 
 # 检查验证码是否正确, 请求srp.M2
 ```
-GET /srp/M2?phone=xx&M1=xx
+GET /srp/M2?M1=xx
 ```
 
 * 200 OK
