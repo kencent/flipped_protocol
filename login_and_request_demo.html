@@ -12,19 +12,20 @@
     // client -> server: username
     // server -> client: bits, salt
 	// sms -> client: password
-    var username = 'username';
-    var password = '123456';
-    var bits = '2048';
-    var salt = sjcl.codec.hex.toBits("A55A7826B145D3E99DB221EB815416B1");
+    var username = '13410794959';
+    var password = '001024';
+    var bits = 2048;
+    var salt = sjcl.codec.hex.toBits("0344e93fcdaa111dc22d7ab3387abf3c");
 
     // 第二步, 生成客户端随机值，使用客户端随机值换取服务器端随机值
     // client -> server: A
     // server -> client: B
     var srp = sjcl.keyexchange.srp;
     var group = srp.knownGroup(bits);
-    var a = sjcl.codec.hex.toBits("BCF1ABCBF6F5CFC9D0540AFEA863E030C27683A8EDD91C86ACC159699BD65112"); //sjcl.random.randomWords(8);
+    var a = sjcl.codec.hex.toBits("bcf1abcbf6f5cfc9d0540afea863e030c27683a8edd91c86acc159699bd65112"); //sjcl.random.randomWords(8);
     var A = srp.makeA(a, group);
-    var B = sjcl.codec.hex.toBits("2726F171F3E59EAAEEFCAA8246B9C733233BF6C14BF68604F2425390A0CFDE858F404E97F3A6D941C8EF679352D11D3B961C35D98B69AAE183ED39A412A42D5EDD066F09976EB64C18C750DD44C6A82BDBBC37327C6AB86C33BF4A19843C1846B2EC4602A710B46F39676D51764D23CD4662DD6E941CF0E425B1C1B0EC7A824613B46DA6C11E0EBCCAE54287D7A34533B63AEE33BC1111F4C9B127C59B7109D8269C71672B5D5006797FC297E0388D303D09E2EEC62757DE61F65ACA04A390A9D6B0197724A454C1B4B03CC587604C6D6824E63C8AA5E91CBFDE5D8C3023BE40352969AE02640466EDC957AFFD2BA01842DB54863EE7256F0FB4993029D1FD90");
+    console.log("A = "  + sjcl.codec.hex.fromBits(A));
+    var B = sjcl.codec.hex.toBits("4560eb8eb1eb2aad79866eac6488e56e8ec7c0c9a7ba0a1bf24c6cf7e0a0008c8ec78da4d4e060130eea8ec0772808b91e6cc71f6a39cbe45b6bcf2b3739c99167294cead175f30b200783ac51f03b640056bbb9a2a9660a7fa96b683a68afc777bae36b6d0efd676b4c5db6e18acaff78e62e3117a5c22da84a2574b11e589aafff31a9283c9e99d2a0cfc5a7af88d389ca89dd6c718e6670034752dd0abdba5d68efc3dffb123ddf1bb4f1958a7179cd3953bd5b2c703db02e18e3d34a14da616f1d334e0afbd29ba422acf860e9eb406639e97ffdde7f8628d4e5a08b845c2d404931f89bf7ea7aa418afaa8c9cd4fe2fd30a8a7b3dba4940a3cb2d492015");
     if (sjcl.bn.fromBits(B).mod(group.N).equals(0)) {
         console.log("bad server");
     }
@@ -35,7 +36,9 @@
     var ClientKey = srp.makeClientKey(username, password, salt, a, A, B, group);
     var M1 = srp.makeM1(username, salt, A, B, ClientKey, group);
     var M2 = srp.makeM2(A, M1, ClientKey);
-    var serverM2 = "61CBB07E7836FDC6F067CFEA1BB48A8220C11EA8";
+    console.log("M1 = "  + sjcl.codec.hex.fromBits(M1));
+    console.log("M2 = "  + sjcl.codec.hex.fromBits(M2));
+    var serverM2 = "be1c3b0ea3fa50331e844ead7e32fdb16b570704";
     if (sjcl.codec.hex.fromBits(M2) != serverM2.toLowerCase()) {
         console.log("bad server");
     }
@@ -71,9 +74,9 @@
     // 第一步, 生成客户端随机值，使用客户端随机值换取服务器端随机值
     // client -> server: A
     // server -> client: B
-    a = sjcl.codec.hex.toBits("BCF1ABCBF6F5CFC9D0540AFEA863E030C27683A8EDD91C86ACC159699BD65112"); //sjcl.random.randomWords(8);
+    a = sjcl.codec.hex.toBits("bcf1abcbf6f5cfc9d0540afea863e030c27683a8edd91c86acc159699bd65112"); //sjcl.random.randomWords(8);
     A = srp.makeA(a, group);
-    B = sjcl.codec.hex.toBits("2726F171F3E59EAAEEFCAA8246B9C733233BF6C14BF68604F2425390A0CFDE858F404E97F3A6D941C8EF679352D11D3B961C35D98B69AAE183ED39A412A42D5EDD066F09976EB64C18C750DD44C6A82BDBBC37327C6AB86C33BF4A19843C1846B2EC4602A710B46F39676D51764D23CD4662DD6E941CF0E425B1C1B0EC7A824613B46DA6C11E0EBCCAE54287D7A34533B63AEE33BC1111F4C9B127C59B7109D8269C71672B5D5006797FC297E0388D303D09E2EEC62757DE61F65ACA04A390A9D6B0197724A454C1B4B03CC587604C6D6824E63C8AA5E91CBFDE5D8C3023BE40352969AE02640466EDC957AFFD2BA01842DB54863EE7256F0FB4993029D1FD90");
+    B = sjcl.codec.hex.toBits("4560eb8eb1eb2aad79866eac6488e56e8ec7c0c9a7ba0a1bf24c6cf7e0a0008c8ec78da4d4e060130eea8ec0772808b91e6cc71f6a39cbe45b6bcf2b3739c99167294cead175f30b200783ac51f03b640056bbb9a2a9660a7fa96b683a68afc777bae36b6d0efd676b4c5db6e18acaff78e62e3117a5c22da84a2574b11e589aafff31a9283c9e99d2a0cfc5a7af88d389ca89dd6c718e6670034752dd0abdba5d68efc3dffb123ddf1bb4f1958a7179cd3953bd5b2c703db02e18e3d34a14da616f1d334e0afbd29ba422acf860e9eb406639e97ffdde7f8628d4e5a08b845c2d404931f89bf7ea7aa418afaa8c9cd4fe2fd30a8a7b3dba4940a3cb2d492015");
     if (sjcl.bn.fromBits(B).mod(group.N).equals(0)) {
         console.log("bad server");
     }
@@ -81,11 +84,10 @@
     // 第二步, 生成新的ClientKey, 同时验证域名是否被劫持
     // client -> server: M1
 	// server -> client: M2
-    // 注意此时后台返回验证码错误（422）应该直接引导用户重新获取验证码
     ClientKey = srp.makeClientKey(username, password, salt, a, A, B, group);
     M1 = srp.makeM1(username, salt, A, B, ClientKey, group);
     M2 = srp.makeM2(A, M1, ClientKey);
-    var serverM2 = "61CBB07E7836FDC6F067CFEA1BB48A8220C11EA8";
+    var serverM2 = "be1c3b0ea3fa50331e844ead7e32fdb16b570704";
     if (sjcl.codec.hex.fromBits(M2) != serverM2.toLowerCase()) {
         console.log("bad server");
     }
