@@ -81,6 +81,7 @@
     // 第二步, 生成新的ClientKey, 同时验证域名是否被劫持
     // client -> server: M1
 	// server -> client: M2
+    // 注意此时后台返回验证码错误（422）应该直接引导用户重新获取验证码
     ClientKey = srp.makeClientKey(username, password, salt, a, A, B, group);
     M1 = srp.makeM1(username, salt, A, B, ClientKey, group);
     M2 = srp.makeM2(A, M1, ClientKey);
