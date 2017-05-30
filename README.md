@@ -118,6 +118,103 @@ curl -H"x-uid:13410794959" "http://127.0.0.1:8082/srp/M2?M1=a8d2d9e2b18b80388835
 ```
 
 
+# 发表flippedwords
+```
+POST /flippedwords
+
+{
+	"to": "13410794959",
+	"contents": [
+		{"type": "text", "text": "bitch!", "link": "91porn.html"},
+		{"type": "picture", "text": "qcloud/fuck", "size": {"width": 100, "height": 200}, " alt": {"type": "text"}},
+		{"type": "video", "text": "youtube/dick", "size": {"width": 100, "height": 200}, "cover": "dick.jpg", alt": {"type": "text"}}
+	],
+	"lat": 22.0000,
+	"lng": 103.0000
+}
+
+# contents是content数组, content的结构为：
+#	type: 类型，如text, picture, video。其中text是最基础的类型，所以其他类型为保证向下兼容性都会有一个alt元素，alt是一定是一个类型为text的content。
+# 	text: 内容。对于text类型，为文本内容；对于picture类型，为图片地址；对于video类型，为视频地址；
+# 	link: 该内容的超链接地址，所有内容均可能有超链接。
+# 	size: size信息。对于picture类型，为图片大小；对于picture类型，为图片地址；对于video类型，为未全屏播放器大小。
+# 	cover: 对于video类型，为视频封面图片。
+```
+
+* 200 OK
+```
+{
+	"id": 172
+}
+```
+
+* 429 Too Many Requests
+```
+{
+	"err": "今天已经发过了，请明天再来！",
+	"errcode": 0
+}
+```
+
+
+# 附近flippedwords
+为保证看到的内容与自己相关，提供附近的flippedwords接口。
+```
+GET /nearby_flippedwords?lat=22&lng=103
+```
+
+* 200 OK
+```
+{
+	"flippedwords": [{
+		"id"： 754,
+		"to": "1xxxxxxxxx7",
+		"contents": [{"type: "text", "text": "I love you"}]
+	},{
+		"id"： 257,
+		"to": "1xxxxxxxxx5",
+		"contents": [{"type: "text", "text": "I wanna fuck you"}]
+	}],
+	"links" [{
+		"rel": "previous",
+		"method": "GET",
+		"uri": "/nearby_flippedwords"
+	}, {
+		"rel": "previous",
+		"method": "GET",
+		"uri": "/nearby_flippedwords?lat=22&lng=103&id=476"
+	}]
+}
+```
+
+
+# 查询发给我的flippedwords
+客户端需要缓存发给我的flippedwords，如客户端请求参数中id=103，则服务器端认为id小于等于103的flippedwords客户端均已接收了，服务器端会删除发送给我的id小于等于103的flippedwords，并且将id大于103的flippedwords返回。
+```
+GET /my_flippedwords?id=103
+```
+
+* 200 OK
+```
+{
+	"flippedwords": [{
+		"id"： 153,
+		"to": "1xxxxxxxxx5",
+		"contents": [{"type: "text", "text": "I wanna fuck you"}]
+	}, {
+		"id"： 104,
+		"to": "1xxxxxxxxx7",
+		"contents": [{"type: "text", "text": "I love you"}]
+	}],
+	"links" [{
+		"rel": "previous",
+		"method": "GET",
+		"uri": "/my_flippedwords?id=153"
+	}]
+}
+```
+
+
 
 
 
