@@ -207,7 +207,7 @@ GET /my_flippedwords?id=103
 		"contents": [{"type: "text", "text": "I love you"}]
 	}],
 	"links" [{
-		"rel": "previous",
+		"rel": "next",
 		"method": "GET",
 		"uri": "/my_flippedwords?id=153"
 	}]
