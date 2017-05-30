@@ -137,7 +137,7 @@ POST /flippedwords
 #	type: 类型，如text, picture, video。其中text是最基础的类型，所以其他类型为保证向下兼容性都会有一个alt元素，alt是一定是一个类型为text的content。
 # 	text: 内容。对于text类型，为文本内容；对于picture类型，为图片地址；对于video类型，为视频地址；
 # 	link: 该内容的超链接地址，所有内容均可能有超链接。
-# 	size: size信息。对于picture类型，为图片大小；对于picture类型，为图片地址；对于video类型，为未全屏播放器大小。
+# 	size: size信息。对于picture类型，为图片大小；对于video类型，为未全屏播放器大小。
 # 	cover: 对于video类型，为视频封面图片。
 ```
 
