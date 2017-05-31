@@ -156,6 +156,18 @@ POST /flippedwords
 }
 ```
 
+* 示例
+```
+curl -v -X POST -d '
+{
+	"sendto": 13410794959,
+	"contents": [
+		{"type": "text", "text": "bitch!"}
+	],
+	"lat": 22,
+	"lng": 103
+}' "http://127.0.0.1:8080/flippedwords"
+```
 
 # 附近flippedwords
 为保证看到的内容与自己相关，提供附近的flippedwords接口。
@@ -189,6 +201,12 @@ GET /nearby_flippedwords?lat=22&lng=103
 }
 ```
 
+* 示例
+```
+curl -H"x-uid:13410794959" "http://127.0.0.1:8080/nearby_flippedwords?lat=22&lng=103"
+{"flippedwords":[{"sendto":13410794959,"lat":22,"id":1000002,"contents":"[{\"text\":\"bitch3!\",\"type\":\"text\"}]","lng":103},{"sendto":13410794959,"lat":22,"id":1000001,"contents":"[{\"text\":\"bitch2!\",\"type\":\"text\"}]","lng":103},{"sendto":13410794959,"lat":22,"id":1000000,"contents":"[{\"text\":\"bitch!\",\"type\":\"text\"}]","lng":103}],"links":[{"rel":"previous","uri":"\/nearby_flippedwords?lng=103&lat=22","method":"GET"},{"rel":"next","uri":"\/nearby_flippedwords?lat=22&id=1000000&lng=103","method":"GET"}]}
+```
+
 
 # 查询发给我的flippedwords
 客户端需要缓存发给我的flippedwords，如客户端请求参数中id=103，则服务器端认为id小于等于103的flippedwords客户端均已接收了，服务器端会删除发送给我的id小于等于103的flippedwords，并且将id大于103的flippedwords返回。
@@ -217,7 +235,11 @@ GET /my_flippedwords?id=103
 }
 ```
 
-
+* 示例
+```
+curl -H"x-uid:13410794959" "http://127.0.0.1:8080/my_flippedwords"
+{"flippedwords":[{"sendto":13410794959,"lat":22,"id":1000000,"contents":"[{\"text\":\"bitch!\",\"type\":\"text\"}]","lng":103},{"sendto":13410794959,"lat":22,"id":1000001,"contents":"[{\"text\":\"bitch2!\",\"type\":\"text\"}]","lng":103},{"sendto":13410794959,"lat":22,"id":1000002,"contents":"[{\"text\":\"bitch3!\",\"type\":\"text\"}]","lng":103}],"links":[{"rel":"previous","uri":"\/my_flippedwords?id=1000002","method":"GET"}]}
+```
 
 
 
