@@ -237,8 +237,8 @@ GET /my_flippedwords?id=103
 
 * 示例
 ```
-curl -H"x-uid:13410794959" "http://127.0.0.1:8080/my_flippedwords"
-{"flippedwords":[{"sendto":13410794959,"lat":22,"id":1000000,"contents":"[{\"text\":\"bitch!\",\"type\":\"text\"}]","lng":103},{"sendto":13410794959,"lat":22,"id":1000001,"contents":"[{\"text\":\"bitch2!\",\"type\":\"text\"}]","lng":103},{"sendto":13410794959,"lat":22,"id":1000002,"contents":"[{\"text\":\"bitch3!\",\"type\":\"text\"}]","lng":103}],"links":[{"rel":"previous","uri":"\/my_flippedwords?id=1000002","method":"GET"}]}
+curl -H"x-uid:13410794959" "http://127.0.0.1:8080/my_flippedwords?id=1000001"
+{"flippedwords":[{"sendto":13410794959,"lat":22,"id":1000002,"contents":"[{\"text\":\"bitch3!\",\"type\":\"text\"}]","lng":103}],"links":[{"rel":"previous","uri":"\/my_flippedwords?id=1000002","method":"GET"}]}
 ```
 
 
