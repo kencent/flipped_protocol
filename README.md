@@ -171,7 +171,9 @@ curl -v -X POST -d '
 
 # 附近flippedwords
 为保证看到的内容与自己相关，提供附近的flippedwords接口。
+
 **注意此接口用户未授权位置时，不能传lat, lng参数**
+
 **返回顺序是id从大到小** 
 ```
 GET /nearby_flippedwords?lat=22&lng=103
@@ -192,7 +194,7 @@ GET /nearby_flippedwords?lat=22&lng=103
 	"links" [{
 		"rel": "previous",
 		"method": "GET",
-		"uri": "/nearby_flippedwords"
+		"uri": "/nearby_flippedwords?lat=22&lng=103"
 	}, {
 		"rel": "previous",
 		"method": "GET",
@@ -210,7 +212,8 @@ curl -H"x-uid:13410794959" "http://127.0.0.1:8080/nearby_flippedwords?lat=22&lng
 
 # 查询发给我的flippedwords
 客户端需要缓存发给我的flippedwords，如客户端请求参数中id=103，则服务器端认为id小于等于103的flippedwords客户端均已接收了，服务器端会删除发送给我的id小于等于103的flippedwords，并且将id大于103的flippedwords返回。
-** 返回顺序是id从小到大，客户端需从大到小展示数据，每次拿最大的id(或links.previous)向服务器查询数据** 
+
+**返回顺序是id从小到大，客户端需从大到小展示数据，每次拿最大的id(或links.previous)向服务器查询数据** 
 ```
 GET /my_flippedwords?id=103
 ```
