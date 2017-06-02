@@ -123,7 +123,7 @@ curl -H"x-uid:13410794959" "http://127.0.0.1:8082/srp/M2?M1=a8d2d9e2b18b80388835
 POST /flippedwords
 
 {
-	"sendto": "13410794959",
+	"sendto": 13410794959,
 	"contents": [
 		{"type": "text", "text": "bitch!", "link": "91porn.html"},
 		{"type": "picture", "text": "qcloud/fuck", "size": {"width": 100, "height": 200}, " alt": {"type": "text"}},
@@ -223,11 +223,11 @@ GET /my_flippedwords?id=103
 {
 	"flippedwords": [{
 		"id"： 104,
-		"sendto": "1xxxxxxxxx5",
+		"sendto": 1xxxxxxxxx5,
 		"contents": [{"type: "text", "text": "I wanna fuck you"}]
 	}, {
 		"id"： 153,
-		"sendto": "1xxxxxxxxx7",
+		"sendto": 1xxxxxxxxx7,
 		"contents": [{"type: "text", "text": "I love you"}]
 	}],
 	"links" [{
