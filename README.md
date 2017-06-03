@@ -130,6 +130,12 @@ GET /youtusig
 }
 ```
 
+* 示例
+```
+curl -k -H"x-uid:13410794959" -H"Authorization:SRP AehgVsne741NRvGGRrrIcktjZtf52/0gFOAlWkSLLAoz8X2XpGhJ1Ccez0e4YA78ZsYHrflvUoRp6odSSgTmnpqVFvbQNqhzl9KJRw52FyQW84AEEUfMK3xIEZ16Lc5D" "https://127.0.0.1/youtusig"
+{"sig":"BgSRe92mhr8Qn82U4zXrVhy1GChhPTEyNTE3ODkzNjcmYj1mbGlwcGVkJms9QUtJREw4cE5seW51ZUZneDN5REpqeTF0ZEVpNEZIOG4yYWlmJmU9MTQ5NzA4MDIzNCZ0PTE0OTY0NzU0MzQmcj01MTcwNyZ1PTAmZj0="}
+```
+
 # 发表flippedwords
 ```
 POST /flippedwords
@@ -140,6 +146,7 @@ POST /flippedwords
 		{"type": "text", "text": "bitch!", "link": "91porn.html"},
 		{"type": "picture", "text": "qcloud/fuck", "size": {"width": 100, "height": 200}, " alt": {"type": "text"}},
 		{"type": "video", "text": "youtube/dick", "size": {"width": 100, "height": 200}, "cover": "dick.jpg", alt": {"type": "text"}}
+		{"type": "audio", "text": "qcloud/suck", "duration": 60, alt": {"type": "text"}}
 	],
 	"lat": 22.0000,
 	"lng": 103.0000
@@ -151,6 +158,7 @@ POST /flippedwords
 # 	link: 该内容的超链接地址，所有内容均可能有超链接。
 # 	size: size信息。对于picture类型，为图片大小；对于video类型，为未全屏播放器大小。
 # 	cover: 对于video类型，为视频封面图片。
+# 	duration: 对于audio类型，为语音时长。
 ```
 
 * 200 OK
