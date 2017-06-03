@@ -118,9 +118,9 @@ curl -H"x-uid:13410794959" "http://127.0.0.1:8082/srp/M2?M1=a8d2d9e2b18b80388835
 ```
 
 # 获取腾讯云对象存储sig
-有效期7天，过期需要主动续期
+如果fileid参数不为空，则生成一次性sig；否则生成7天有效sig，过期需要主动续期。
 ```
-GET /youtusig
+GET /youtusig?fileid=/1251789367/flipped/test/a.jpg
 ```
 
 * 200 OK
@@ -233,9 +233,10 @@ curl -H"x-uid:13410794959" "http://127.0.0.1:8080/nearby_flippedwords?lat=22&lng
 
 
 # 查询发给我的flippedwords
-客户端需要缓存发给我的flippedwords，如客户端请求参数中id=103，则服务器端认为id小于等于103的flippedwords客户端均已接收了，服务器端会删除发送给我的id小于等于103的flippedwords，并且将id大于103的flippedwords返回。
+客户端需要缓存发给我的flippedwords，如客户端请求参数中id=103，则服务器端认为id小于等于103的flippedwords客户端均已接收了，服务器端会更新发送给我的id小于等于103的flippedwords的状态（该状态后续有可能回显给发送人），并且将id大于103的flippedwords返回。
 
 **返回顺序是id从小到大，客户端需从大到小展示数据，每次拿最大的id(或links.previous)向服务器查询数据** 
+
 ```
 GET /my_flippedwords?id=103
 ```
