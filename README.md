@@ -268,6 +268,17 @@ curl -H"x-uid:13410794959" "http://127.0.0.1:8080/my_flippedwords?id=1000001"
 ```
 
 
+# 反馈
+```
+POST /feedbacks
+
+{
+	"contents": [{}, {}]
+}
+
+# contents格式同发表flippedword（POST /flippedwords）
+```
+
 
 
 
