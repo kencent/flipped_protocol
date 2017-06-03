@@ -117,6 +117,17 @@ curl -H"x-uid:13410794959" "http://127.0.0.1:8082/srp/M2?M1=a8d2d9e2b18b80388835
 {"M2":"be1c3b0ea3fa50331e844ead7e32fdb16b570704"}
 ```
 
+# 获取腾讯云对象存储sig
+```
+GET /youtusig
+```
+
+* 200 OK
+```
+{
+	"sig": "xxxxxxxx"
+}
+```
 
 # 发表flippedwords
 ```
