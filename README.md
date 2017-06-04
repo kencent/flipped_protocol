@@ -178,7 +178,7 @@ POST /flippedwords
 
 * 示例
 ```
-curl -v -X POST -d '
+curl -v -X POST -H"x-uid:13410794959" -d '
 {
 	"sendto": "13410794959",
 	"contents": [
@@ -278,6 +278,17 @@ POST /feedbacks
 # contents格式同发表flippedword（POST /flippedwords）
 ```
 
+* 示例
+```
+curl -v -X POST -H"x-uid:13410794959" -d '
+{
+	"contents": [
+		{"type": "text", "text": "bitch!"}
+	],
+	"lat": 22,
+	"lng": 103
+}' "http://127.0.0.1:8080/feedbacks"
+```
 
 
 
