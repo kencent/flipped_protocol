@@ -306,6 +306,10 @@ GET /mypub_flippedwords
 	"links" [{
 		"rel": "previous",
 		"method": "GET",
+		"uri": "/mypub_flippedwords"
+	},{
+		"rel": "next",
+		"method": "GET",
 		"uri": "/mypub_flippedwords?id=104"
 	}]
 }
