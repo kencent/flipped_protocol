@@ -195,6 +195,8 @@ curl -v -X POST -d '
 **注意此接口用户未授权位置时，不能传lat, lng参数**
 
 **返回顺序是id从大到小** 
+
+**接口目前最多返回200条，不支持翻页** 
 ```
 GET /nearby_flippedwords?lat=22&lng=103
 ```
@@ -205,22 +207,19 @@ GET /nearby_flippedwords?lat=22&lng=103
 	"flippedwords": [{
 		"id"： 754,
 		"sendto": "1xxxxxxxxx7",
-		"ctime": 1496479362,
+		"ctime": 1496479362123,
+		"distance": 65,
 		"contents": [{"type: "text", "text": "I love you"}]
 	},{
 		"id"： 257,
 		"sendto": "1xxxxxxxxx5",
-		"ctime": 1496478362,
+		"ctime": 1496478362456,
 		"contents": [{"type: "text", "text": "I wanna fuck you"}]
 	}],
 	"links" [{
 		"rel": "previous",
 		"method": "GET",
 		"uri": "/nearby_flippedwords?lat=22&lng=103"
-	}, {
-		"rel": "previous",
-		"method": "GET",
-		"uri": "/nearby_flippedwords?lat=22&lng=103&id=476"
 	}]
 }
 ```
