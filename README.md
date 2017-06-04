@@ -189,6 +189,21 @@ curl -v -X POST -H"x-uid:13410794959" -d '
 }' "http://127.0.0.1:8080/flippedwords"
 ```
 
+# 查询flippedwords详情
+```
+GET /flippedwords/{id}
+```
+
+* 200 OK
+```
+{
+	"id"： 754,
+	"sendto": "132******27",
+	"ctime": 1496479362123,
+	"contents": [{"type: "text", "text": "I love you"}]
+}
+```
+
 # 附近flippedwords
 为保证看到的内容与自己相关，提供附近的flippedwords接口。
 
@@ -206,13 +221,13 @@ GET /nearby_flippedwords?lat=22&lng=103
 {
 	"flippedwords": [{
 		"id"： 754,
-		"sendto": "1xxxxxxxxx7",
+		"sendto": "132******27",
 		"ctime": 1496479362123,
 		"distance": 65,
 		"contents": [{"type: "text", "text": "I love you"}]
 	},{
 		"id"： 257,
-		"sendto": "1xxxxxxxxx5",
+		"sendto": "132******25",
 		"ctime": 1496478362456,
 		"contents": [{"type: "text", "text": "I wanna fuck you"}]
 	}],
@@ -245,11 +260,11 @@ GET /my_flippedwords?id=103
 {
 	"flippedwords": [{
 		"id"： 104,
-		"ctime": 1496479362,
+		"ctime": 1496479362234,
 		"contents": [{"type: "text", "text": "I wanna fuck you"}]
 	}, {
 		"id"： 153,
-		"ctime": 1496475362,
+		"ctime": 1496475362456,
 		"contents": [{"type: "text", "text": "I love you"}]
 	}],
 	"links" [{
@@ -264,6 +279,65 @@ GET /my_flippedwords?id=103
 ```
 curl -H"x-uid:13410794959" "http://127.0.0.1:8080/my_flippedwords?id=1000001"
 {"flippedwords":[{"sendto":"13410794959","lat":22,"id":1000002,"contents":"[{\"text\":\"bitch3!\",\"type\":\"text\"}]","lng":103}],"links":[{"rel":"previous","uri":"\/my_flippedwords?id=1000002","method":"GET"}]}
+```
+
+# 查询我发表的flippedwords
+按发表时间从大到小排序，支持分页
+```
+GET /mypub_flippedwords
+```
+
+* 200 OK
+```
+{
+	"flippedwords": [{
+		"id"： 153,
+		"ctime": 1496479362567,
+		"sendto": "13210794925",
+		"contents": [{"type: "text", "text": "I wanna fuck you"}],
+		"status": 100
+	}, {
+		"id"： 104,
+		"ctime": 1496475362678,
+		"sendto": "13270244925",
+		"contents": [{"type: "text", "text": "I love you"}],
+		"status": 200
+	}],
+	"links" [{
+		"rel": "previous",
+		"method": "GET",
+		"uri": "/mypub_flippedwords?id=104"
+	}]
+}
+
+# status取值：
+# 	0 新发表
+# 	100 已下发给接收人客户端
+# 	200 接收人已读
+```
+
+# 查询自上次打开应用，我发出去的，新的被对方已读的flippedwords
+不分页，返回全部。
+客户端缓存上次打开应用时的毫秒数
+```
+GET /read_flippedwords?last_open_time=1496475362678
+```
+
+* 200 OK
+```
+{
+	"flippedwords": [{
+		"id"： 153,
+		"ctime": 1496479362567,
+		"sendto": "13270244925",
+		"contents": [{"type: "text", "text": "I wanna fuck you"}]
+	}, {
+		"id"： 104,
+		"ctime": 1496475362678,
+		"sendto": "13270244925",
+		"contents": [{"type: "text", "text": "I love you"}]
+	}]
+}
 ```
 
 
