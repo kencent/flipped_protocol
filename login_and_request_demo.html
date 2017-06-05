@@ -51,8 +51,20 @@
     console.log("password = "  + password);
     console.log("ClientKey = "  + sjcl.codec.hex.fromBits(ClientKey));
     var seq = 1;
-	//var token = {I: username, t: new Date().getTime(), q: seq, clt: {p: "wxapp", v: 10000}, r: sjcl.random.randomWords(1)[0]};
-	var token = {I: username, t: new Date().getTime(), q: seq, clt: {p: "wxapp", v: 10000}, r: sjcl.random.randomWords(1)[0]};
+    var ts = new Date().getTime()
+    var rd = sjcl.random.randomWords(1, 0)[0]
+
+    // 同时为了防请求参数和请求体补篡改，需生成签名信息
+    var method = "POST"
+    var uri = "/flippedwords?a=1"
+    var body = "{\"text\":\"haha\"}"
+    var sign = username + ts + seq + rd + method + uri + body
+    console.log("sign = "  + sign);
+    var hmac_sha1 = new sjcl.misc.hmac(ClientKey, sjcl.hash.sha1)
+    sign = sjcl.codec.base64.fromBits(hmac_sha1.encrypt(sign))
+    console.log("sign = "  + sign);
+
+	var token = {I: username, t: ts, q: seq, clt: {p: "wxapp", v: 10000}, r: rd, sign: sign};
     token = sjcl.codec.utf8String.toBits(JSON.stringify(token));
 	// iv是前后台写死的一个固定的值 
     var iv = sjcl.codec.hex.toBits("bfd3814678afe0036efa67ca8da44e2e");
@@ -74,9 +86,9 @@
     // 第一步, 生成客户端随机值，使用客户端随机值换取服务器端随机值
     // client -> server: A
     // server -> client: B
-    a = sjcl.codec.hex.toBits("bcf1abcbf6f5cfc9d0540afea863e030c27683a8edd91c86acc159699bd65112"); //sjcl.random.randomWords(8);
+    a = sjcl.codec.hex.toBits("0178f179adc53a4262207f2843ac4dcee39a9ad27fb0e18fe4708af51be0505a"); //sjcl.random.randomWords(8);
     A = srp.makeA(a, group);
-    B = sjcl.codec.hex.toBits("4560eb8eb1eb2aad79866eac6488e56e8ec7c0c9a7ba0a1bf24c6cf7e0a0008c8ec78da4d4e060130eea8ec0772808b91e6cc71f6a39cbe45b6bcf2b3739c99167294cead175f30b200783ac51f03b640056bbb9a2a9660a7fa96b683a68afc777bae36b6d0efd676b4c5db6e18acaff78e62e3117a5c22da84a2574b11e589aafff31a9283c9e99d2a0cfc5a7af88d389ca89dd6c718e6670034752dd0abdba5d68efc3dffb123ddf1bb4f1958a7179cd3953bd5b2c703db02e18e3d34a14da616f1d334e0afbd29ba422acf860e9eb406639e97ffdde7f8628d4e5a08b845c2d404931f89bf7ea7aa418afaa8c9cd4fe2fd30a8a7b3dba4940a3cb2d492015");
+    B = sjcl.codec.hex.toBits("6532b87dde984a90fb5095f5f167dabe88aabc678dd27372ab70a7fc0ee2016fbf542e547270087358bcce072a85008cd81912646c67a97d83ae2892306d21a0919d574faf7f7cbbca3511d76da5483076237bc161ecc2f534865cfd38c6ab39c49bb639d6ac1f6d36f98fb20f193c95fe1bfcf6b6275d1fa208809fc61d7c63815151adfdea80b3a9c9b2d9f3d83361b679243211daebfeee180dab6aed2269ac3a1bcb7f990543c9a2991c2a59e9ddff27d168e5bedae5bf2966ff0b4f43608ec5854cac08874184285616b78c9c5fdb195d087baafd27a6d22e1e8765d9ef6b6b2cbe5dfc2bb962f75376b40bc6f03648595e1959dedaf2af1fe79a364fc6");
     if (sjcl.bn.fromBits(B).mod(group.N).equals(0)) {
         console.log("bad server");
     }
@@ -87,7 +99,7 @@
     ClientKey = srp.makeClientKey(username, password, salt, a, A, B, group);
     M1 = srp.makeM1(username, salt, A, B, ClientKey, group);
     M2 = srp.makeM2(A, M1, ClientKey);
-    var serverM2 = "be1c3b0ea3fa50331e844ead7e32fdb16b570704";
+    var serverM2 = "c0d0b85271c15d9fc48edfd703e166f8b6ee183d";
     if (sjcl.codec.hex.fromBits(M2) != serverM2.toLowerCase()) {
         console.log("bad server");
     }
